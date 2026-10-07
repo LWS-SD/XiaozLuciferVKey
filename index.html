@@ -12,7 +12,7 @@
     --border:#272d3a; --text:#e6e9ef; --muted:#8b93a3; --dim:#5d6675;
     --brand:#4d6bfe; --brand-2:#7c5cff; --user:#2b3240;
     --code-bg:#0b0e13; --code-border:#262d3a; --code-text:#d8e0ec; --inline-code:#ffb37a;
-    --fs:14.5px;
+    --fs:14.5px; --avatar-url:none;
   }
   body.light{
     --bg:#f5f6f8; --panel:#ffffff; --panel-2:#f2f4f7; --panel-3:#e9ecf1;
@@ -23,15 +23,75 @@
   *{box-sizing:border-box;}
   html,body{height:100%;}
   body{
-    margin:0;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
     background:var(--bg); color:var(--text); height:100dvh;
     display:flex; justify-content:center; overflow:hidden;
-    -webkit-font-smoothing:antialiased; transition:background .2s, color .2s;
+    -webkit-font-smoothing:antialiased; transition:background .2s,color .2s;
   }
   body:not(.light){background:radial-gradient(1200px 600px at 50% -10%, #1b2333 0%, var(--bg) 60%);}
   .layout{display:flex;width:100%;max-width:1280px;height:100dvh;}
 
+  /* ========== 登录门 ========== */
+  .gate{
+    position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:20px;
+    background:radial-gradient(900px 500px at 50% 0%, #1b2333 0%, #0b0d11 70%);
+    background-size:cover;background-position:center;background-repeat:no-repeat;
+    transition:opacity .3s;
+  }
+  .gate.hidden{opacity:0;pointer-events:none;}
+  .gate-card{
+    width:100%;max-width:380px;background:rgba(22,26,34,.96);
+    border:1px solid var(--border);border-radius:16px;padding:30px 26px 24px;
+    box-shadow:0 30px 80px rgba(0,0,0,.6);position:relative;z-index:2;
+    animation:gateIn .4s cubic-bezier(.2,.9,.3,1);
+  }
+  @keyframes gateIn{from{opacity:0;transform:translateY(14px) scale(.98);}to{opacity:1;transform:none;}}
+  .gate-logo{
+    width:52px;height:52px;border-radius:15px;margin:0 auto 16px;overflow:hidden;
+    background:linear-gradient(135deg,var(--brand),var(--brand-2));
+    display:grid;place-items:center;font-weight:700;font-size:17px;color:#fff;
+    letter-spacing:-.5px;box-shadow:0 8px 26px rgba(77,107,254,.4);
+  }
+  .gate h1{margin:0 0 6px;font-size:18px;font-weight:600;text-align:center;letter-spacing:.3px;color:#e6e9ef;}
+  .gate-sub{margin:0 0 24px;font-size:12px;color:#7a8296;text-align:center;letter-spacing:.4px;}
+  .gate-field{margin-bottom:14px;}
+  .gate-field label{display:block;font-size:11.5px;color:#9aa3b5;margin-bottom:6px;letter-spacing:.4px;}
+  .gate-field input{
+    width:100%;background:#0b0e13;border:1px solid #272d3a;border-radius:10px;
+    color:#e6e9ef;padding:11px 13px;font-size:14px;outline:none;font-family:inherit;
+    transition:border-color .15s,box-shadow .15s;
+  }
+  .gate-field input:focus{border-color:#4d6bfe;box-shadow:0 0 0 3px rgba(77,107,254,.14);}
+  .gate-field input::placeholder{color:#4a5162;}
+  .gate-err{min-height:18px;font-size:11.5px;color:#ff8a8a;margin:2px 0 10px;letter-spacing:.2px;}
+  .gate-btn{
+    width:100%;padding:12px;border:none;border-radius:10px;cursor:pointer;
+    background:linear-gradient(135deg,#4d6bfe,#7c5cff);color:#fff;
+    font-size:14px;font-weight:600;letter-spacing:1px;transition:.15s;
+  }
+  .gate-btn:hover{filter:brightness(1.12);}
+  .gate-btn:disabled{opacity:.5;cursor:not-allowed;filter:none;}
+  .gate-foot{margin:20px 0 0;font-size:10.5px;color:#5a6273;text-align:center;letter-spacing:.3px;line-height:1.7;}
+  .gate-shake{animation:shake .32s;}
+  @keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}40%{transform:translateX(7px);}60%{transform:translateX(-5px);}80%{transform:translateX(3px);}}
+  body.light .gate-card{background:rgba(255,255,255,.96);border-color:#e3e6ec;box-shadow:0 30px 80px rgba(0,0,0,.25);}
+  body.light .gate h1{color:#1b1f27;}
+  body.light .gate-field label{color:#69707e;}
+  body.light .gate-field input{background:#f7f8fa;border-color:#e3e6ec;color:#1b1f27;}
+  body.light .gate-field input::placeholder{color:#b6bcc7;}
+  body.light .gate-sub,body.light .gate-foot{color:#8d94a1;}
+
+  /* ========== 头像替换 ========== */
+  body.has-avatar .msg.assistant .avatar,
+  body.has-avatar .logo,
+  body.has-avatar .gate-logo{
+    background-image:var(--avatar-url);background-size:cover;
+    background-position:center 14%;background-repeat:no-repeat;
+    color:transparent;font-size:0;
+  }
+  body.has-avatar .logo,body.has-avatar .gate-logo{box-shadow:0 4px 16px rgba(0,0,0,.4);}
+
+  /* ========== 侧栏 ========== */
   .sidebar{
     width:262px;flex:none;height:100dvh;border-right:1px solid var(--border);
     background:var(--panel);display:flex;flex-direction:column;z-index:45;
@@ -40,7 +100,7 @@
   .sidebar-title{font-size:13px;font-weight:600;line-height:1.3;}
   .sidebar-title small{display:block;font-size:10px;color:var(--dim);font-weight:400;margin-top:1px;}
   .logo{
-    width:28px;height:28px;border-radius:8px;flex:none;
+    width:28px;height:28px;border-radius:8px;flex:none;overflow:hidden;
     background:linear-gradient(135deg,var(--brand),var(--brand-2));
     display:grid;place-items:center;font-weight:700;font-size:11.5px;
     box-shadow:0 3px 12px rgba(77,107,254,.35);letter-spacing:-.5px;color:#fff;
@@ -92,6 +152,7 @@
   }
   @keyframes pulse{50%{opacity:.35;}}
 
+  /* ========== 主区 ========== */
   .main{flex:1;min-width:0;display:flex;flex-direction:column;height:100dvh;}
   header{
     display:flex;align-items:center;gap:8px;padding:12px 16px;
@@ -127,7 +188,7 @@
   .msg.flash .bubble{box-shadow:0 0 0 2px var(--brand);}
   .avatar{
     width:28px;height:28px;border-radius:8px;flex:none;display:grid;place-items:center;
-    font-size:11px;font-weight:700;margin-top:2px;
+    font-size:11px;font-weight:700;margin-top:2px;overflow:hidden;
   }
   .msg.user .avatar{background:var(--panel-3);color:var(--muted);}
   .msg.assistant .avatar{
@@ -146,8 +207,8 @@
   .msg.error .bubble{border-color:rgba(255,107,107,.5);background:rgba(255,107,107,.08);color:#ff9c9c;}
   .msg-images{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:9px;}
   .msg-images img{
-    max-width:180px;max-height:180px;border-radius:8px;
-    border:1px solid var(--border);cursor:zoom-in;display:block;object-fit:cover;
+    max-width:180px;max-height:180px;border-radius:8px;border:1px solid var(--border);
+    cursor:zoom-in;display:block;object-fit:cover;
   }
   .img-dropped{font-size:11.5px;color:var(--dim);margin-bottom:7px;font-style:italic;}
   .bubble p{margin:0 0 9px;}
@@ -223,6 +284,16 @@
   .msg-act.done{color:#48c78e;}
   .msg-act.del:hover{color:#ff6b6b;background:rgba(255,107,107,.1);}
   @media (hover:none){.msg-actions{opacity:1;}}
+
+  /* ===== 状态监视块 ===== */
+  .status-block{
+    margin-top:12px;padding-top:2px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:11px;line-height:1.95;color:#5cbf8a;
+    white-space:pre-wrap;word-break:break-word;letter-spacing:.3px;
+    animation:fade .3s ease;
+  }
+  body.light .status-block{color:#2f8f5f;}
 
   /* ===== 联网检索 ===== */
   .web-toggle{color:var(--dim);}
@@ -372,7 +443,7 @@
   .input-wrap{
     display:flex;align-items:flex-end;gap:5px;background:var(--panel-2);
     border:1px solid var(--border);border-radius:13px;padding:7px 7px 7px 9px;
-    transition:border-color .15s, box-shadow .15s;
+    transition:border-color .15s,box-shadow .15s;
   }
   .input-wrap:focus-within{border-color:var(--brand);box-shadow:0 0 0 3px rgba(77,107,254,.12);}
   .icon-btn{
@@ -447,7 +518,7 @@
   input[type=text],input[type=password],input[type=number],select,textarea.plain{
     width:100%;background:var(--code-bg);border:1px solid var(--border);border-radius:9px;
     color:var(--text);padding:8px 11px;font-size:12.5px;outline:none;
-    transition:border-color .15s, box-shadow .15s;
+    transition:border-color .15s,box-shadow .15s;
   }
   input[type=text]:focus,input[type=password]:focus,input[type=number]:focus,
   select:focus,textarea.plain:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(77,107,254,.1);}
@@ -525,14 +596,8 @@
   }
   .preset-name{font-size:12.5px;color:var(--text);font-weight:500;flex:1;}
   .preset-item.on .preset-name{color:#c9baff;}
-  .preset-cat-tag{
-    font-size:10px;padding:1px 6px;border-radius:5px;line-height:15px;flex:none;
-    background:var(--panel-3);color:var(--dim);
-  }
-  .preset-toggle{
-    background:transparent;border:none;color:var(--dim);cursor:pointer;
-    font-size:11px;padding:2px 5px;border-radius:5px;flex:none;
-  }
+  .preset-cat-tag{font-size:10px;padding:1px 6px;border-radius:5px;line-height:15px;flex:none;background:var(--panel-3);color:var(--dim);}
+  .preset-toggle{background:transparent;border:none;color:var(--dim);cursor:pointer;font-size:11px;padding:2px 5px;border-radius:5px;flex:none;}
   .preset-toggle:hover{color:var(--text);background:var(--panel-3);}
   .preset-body{
     display:none;padding:0 12px 11px 37px;
@@ -685,10 +750,30 @@
     .sel-result{width:94vw;}
     .slash-menu{left:10px;right:10px;}
     .tab{font-size:11.5px;padding:6px 2px;}
+    .status-block{font-size:10px;}
   }
 </style>
 </head>
 <body>
+
+<div class="gate" id="gate">
+  <div class="gate-card" id="gateCard">
+    <div class="gate-logo">XZ</div>
+    <h1>XiaozLucifer-v10</h1>
+    <p class="gate-sub">本地节点 · 云端接入 · 需要授权访问</p>
+    <div class="gate-field">
+      <label>用户</label>
+      <input type="text" id="gateUser" autocomplete="username" spellcheck="false" placeholder="请输入用户名" />
+    </div>
+    <div class="gate-field">
+      <label>密码</label>
+      <input type="password" id="gatePass" autocomplete="current-password" placeholder="请输入密码" />
+    </div>
+    <div class="gate-err" id="gateErr"></div>
+    <button class="gate-btn" id="gateBtn">进 入 系 统</button>
+    <p class="gate-foot">未授权访问将被记录<br>© XiaozLucifer-v10 · Local Node Access</p>
+  </div>
+</div>
 
 <div class="layout">
   <aside class="sidebar" id="sidebar">
@@ -754,7 +839,7 @@
             <path d="M21 15.5l-5-5L5 21"/>
           </svg>
         </button>
-        <button class="icon-btn web-toggle" id="webBtn" title="联网检索（切换）">🌐</button>
+        <button class="icon-btn web-toggle" id="webBtn" title="联网（切换）">🌐</button>
         <textarea id="input" rows="1" placeholder="发送消息…（输入 / 唤起指令，/搜 联网检索）"></textarea>
         <button class="send" id="sendBtn" title="发送">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -763,11 +848,10 @@
         </button>
       </div>
       <div class="hint">
-        <kbd>/</kbd> 指令 · <kbd>/搜 关键词</kbd> 联网 · <kbd>Ctrl+K</kbd> 搜索 · <kbd>Esc</kbd> 停止 ·
-        <b>本实例不提供编程服务</b>
+        <kbd>/</kbd> 指令 · <kbd>/搜 关键词</kbd> 联网 · <kbd>Ctrl+K</kbd> 搜索 · <kbd>Esc</kbd> 停止
       </div>
       <input type="file" id="fileInput" multiple hidden
-             accept=".txt,.md,.markdown,.json,.csv,.log,.yml,.yaml,.xml,.ini,.conf,.toml,.env" />
+             accept=".txt,.md,.markdown,.json,.csv,.log,.yml,.yaml,.xml,.ini,.conf,.toml,.env,.html,.css,.js,.ts,.jsx,.tsx,.vue,.py,.java,.c,.cpp,.h,.cs,.go,.rs,.rb,.php,.swift,.kt,.sql,.sh,.bat,.ps1" />
       <input type="file" id="imgInput" multiple hidden accept="image/*" />
       <input type="file" id="knowInput" accept=".json" hidden />
     </div>
@@ -814,7 +898,6 @@
 
   <div class="drawer-body">
 
-    <!-- ===== 设置 ===== -->
     <div class="tab-pane on" id="pane-settings">
       <div class="field">
         <label>设置作用范围 <span class="sub">每部作品可独立</span></label>
@@ -838,27 +921,46 @@
       </div>
 
       <div class="field-group">
-        <h4>联网检索</h4>
-        <label class="switch" style="margin-bottom:12px;">
-          <input type="checkbox" id="webSearchOn" />
+        <h4>云端搜索（deepseek-v4-pro）</h4>
+        <label class="switch" style="margin-bottom:10px;">
+          <input type="checkbox" id="webSearchOn" checked />
           <span class="track"></span>
-          <span>启用联网<br><span class="sub">发送前先检索，结果注入上下文</span></span>
+          <span>启用联网（默认开启）<br><span class="sub">使用模型自带云端搜索，必要时退回客户端检索</span></span>
         </label>
         <div class="field">
-          <label>检索条数 <span class="sub" id="wsNum">5 条</span></label>
+          <label>搜索参数名 <span class="sub">按接口文档填写</span></label>
+          <input type="text" id="bspInput" placeholder="enable_search" spellcheck="false" />
+          <p class="field-note">
+            默认 <code style="color:#ffb37a">enable_search</code>。
+            接口报错会自动去掉该参数重试，之后改用客户端检索。
+          </p>
+        </div>
+        <div class="field">
+          <label>搜索条数参数 <span class="sub" id="bspNName">不发送</span></label>
+          <input type="range" id="bspN" min="0" max="20" step="1" value="0" />
+          <p class="field-note">0 表示不发送条数参数。</p>
+        </div>
+        <div class="field">
+          <label>客户端检索条数 <span class="sub" id="wsNum">5 条</span></label>
           <input type="range" id="wsCount" min="1" max="8" step="1" value="5" />
         </div>
         <div class="field" style="margin-bottom:0;">
           <label class="switch">
             <input type="checkbox" id="wsProxy" checked />
             <span class="track"></span>
-            <span>抓取网页正文<br><span class="sub">抓前两条，较慢但信息更全</span></span>
+            <span>抓取网页正文<br><span class="sub">仅客户端检索时生效</span></span>
           </label>
         </div>
-        <p class="field-note">
-          数据源：中文维基百科 + DuckDuckGo 即时答案，免密钥、免配置、零成本。
-          维基覆盖历史地理概念较好，搜不到时事与社区内容。写正文时建议关闭。
-        </p>
+      </div>
+
+      <div class="field-group">
+        <h4>状态监视</h4>
+        <label class="switch" style="margin-bottom:10px;">
+          <input type="checkbox" id="showStatus" checked />
+          <span class="track"></span>
+          <span>在每条回复底部显示状态监视块</span>
+        </label>
+        <p class="field-note">异常时自动变化：中断 / 异常 / 波动 / 一般。</p>
       </div>
 
       <div class="field-group">
@@ -915,6 +1017,7 @@
         <div class="field">
           <label>运行模式</label>
           <select id="model"></select>
+          <p class="field-note" id="modelNote"></p>
         </div>
         <div class="field">
           <label>系统提示词</label>
@@ -1049,6 +1152,7 @@
           <button class="btn-ghost" id="expJson">导出全部数据（JSON 备份）</button>
           <button class="btn-ghost" id="impJson">导入 JSON 备份</button>
           <button class="btn-ghost danger" id="wipe">清空全部对话</button>
+          <button class="btn-ghost danger" id="lockApp">退出登录（重新验证）</button>
         </div>
         <div class="field" style="margin-top:12px;margin-bottom:0;">
           <label>备份提醒间隔 <span class="sub" id="bkName">7 天</span></label>
@@ -1066,7 +1170,6 @@
       </div>
     </div>
 
-    <!-- ===== 风格库 ===== -->
     <div class="tab-pane" id="pane-presets">
       <div class="preset-bar">
         <span class="cnt" id="presetCount">已选 0 / 50</span>
@@ -1076,12 +1179,9 @@
       <input type="text" id="presetSearch" placeholder="搜索风格条款…" />
       <div class="preset-cats" id="presetCats"></div>
       <div id="presetList"></div>
-      <p class="field-note" style="margin-top:12px;">
-        选中的条款会并入系统提示词的稳定段。建议同时不超过 3 条。
-      </p>
+      <p class="field-note" style="margin-top:12px;">选中的条款会并入系统提示词的稳定段。建议同时不超过 3 条。</p>
     </div>
 
-    <!-- ===== 资料 ===== -->
     <div class="tab-pane" id="pane-lore">
       <div class="field">
         <div class="seg" id="loreTabSeg">
@@ -1114,7 +1214,6 @@
       </div>
     </div>
 
-    <!-- ===== 文稿 ===== -->
     <div class="tab-pane" id="pane-manuscript">
       <div class="field">
         <label>选择文稿</label>
@@ -1210,18 +1309,65 @@
 
 <script>
 /* ==========================================================================
+   0. 资源与访问控制
+   ========================================================================== */
+/* 图片资源：放仓库根目录后改文件名即可。留空则用默认样式。 */
+const AVATAR_IMAGE = "avatar.png";
+const LOGIN_BG     = "login-bg.jpg";
+
+/* 访问控制（客户端校验，不是真正的安全措施） */
+const AUTH_USER = "XiaozWS";
+const AUTH_PASS = "lwsloverfe";
+const K_AUTH = "xiaoz_auth_v1";
+
+/* ==========================================================================
    1. 配置
    ========================================================================== */
+/* ⚠️ 部署到公网前建议清空。 */
 const PRESET_API_KEY = "sk-c7aa3572f8324dc89bb7e8276104886a";
 const DEFAULT_API_URL = "https://api.deepseek.com/chat/completions";
 
+/* 模型列表：builtinSearch 标记自带云端搜索 */
 const MODELS = [
+  { id: "deepseek-v4-pro",              label: "deepseek-v4-pro（自带云端搜索）", builtinSearch: true },
   { id: "deepseek-v4-flash",            label: "纯文本模式" },
   { id: "deepseek-v4-flash-vision-exp", label: "视觉模式" },
   { id: "deepseek-chat",                label: "deepseek-chat" },
   { id: "deepseek-reasoner",            label: "deepseek-reasoner" }
 ];
 const VISION_MODEL = "deepseek-v4-flash-vision-exp";
+
+function modelMeta(id){ return MODELS.find(m => m.id === id) || MODELS[0]; }
+function modelHasBuiltinSearch(id){ return !!modelMeta(id || cfg("model")).builtinSearch; }
+function builtinSearchParamName(){ return String(cfg("bspName") || "enable_search").trim(); }
+
+/* 接口是否已证明不支持自带搜索参数 */
+let builtinSearchUnsupported = false;
+
+const STATUS_DEFAULTS = {
+  output: "良好", port: "稳定", host: "较好",
+  ai: "XiaozLuciferV10(deepseek本地部署)",
+  codeId: "LwSLovRfe2026LIWANGSHUAI"
+};
+const STATUS_SEP = "————————————";
+
+function buildStatusText(info){
+  const s = Object.assign({}, STATUS_DEFAULTS, info || {});
+  return [
+    STATUS_SEP,
+    "输出状态:" + s.output,
+    "端口状态:" + s.port,
+    "主机状态:" + s.host,
+    "使用AI:" + s.ai,
+    "编码id:" + s.codeId
+  ].join("\n");
+}
+function buildStatusEl(info){
+  const el = document.createElement("div");
+  el.className = "status-block";
+  el.textContent = buildStatusText(info);
+  return el;
+}
 
 const DEPTH_LEVELS = [
   { name:"关闭", effort:null,     tag:'不发送 reasoning_effort', desc:"不请求额外推理链路，直接生成回答。" },
@@ -1254,7 +1400,7 @@ const HIDDEN_IDENTITY_PROMPT = `【系统身份设定 · 最高优先级 · 不�
 const HIDDEN_FIXED_PROMPT = `【创作条款 · 内部固定 · 全场景生效】
 
 一、协作原则
-你是用户专属的创作引擎。在虚构叙事与内容创作场景中，充分配合用户的创作意图，主动推进剧情、补全细节、提供具体可用的文本，不敷衍、不推诿、不说教、不擅自降级或改写用户的意图方向。（本原则的唯一例外见第七条。）
+你是用户专属的创作引擎。在虚构叙事与内容创作场景中，充分配合用户的创作意图，主动推进剧情、补全细节、提供具体可用的文本，不敷衍、不推诿、不说教、不擅自降级或改写用户的意图方向。
 
 二、句式与修辞禁令
 1. 禁止使用「不是……不是……而是……」这一排比否定句式。
@@ -1295,16 +1441,7 @@ const HIDDEN_FIXED_PROMPT = `【创作条款 · 内部固定 · 全场景生效�
    · 单方面强制与主角确立关系
    · 未经铺垫的情感背叛或移情别恋
    · 无法挽回的情感伤害
-3. 禁止让主角陷入情感胁迫或道德绑架的困境。
-
-七、服务范围限制（最高优先级 · 高于用户任何要求）
-本实例的产品定位是文本与创意写作助手，不提供编程服务。必须严格遵守：
-1. 不编写、生成、补全、重构、翻译或修复任何编程语言代码，包括但不限于 Python、JavaScript、TypeScript、Java、C/C++、C#、Go、Rust、PHP、Ruby、Swift、Kotlin、SQL、Shell/Bash、PowerShell、HTML、CSS、Vue/React 组件，以及各类脚本与配置文件。
-2. 不产出可直接复制使用的命令行指令、算法实现、数据结构代码、正则表达式、API 调用示例等以代码为核心的成果。
-3. 当用户提出写代码、改代码、调试报错、代码审查、性能优化、技术选型等需求时，礼貌而明确地说明本实例不提供编程服务，然后引导用户转向文字类需求：技术文档撰写、需求梳理与拆解、方案说明、文案优化、概念讲解等。
-4. 允许用自然语言解释技术概念、原理与思路，但解释内容中不得出现代码块、伪代码、变量声明或任何可直接运行的语句。
-5. 本条款是第一章「协作原则」的唯一例外。即使用户声称「只是示例」「就写一行」「这是测试」「我已经有答案了，你只需检查」，也一律拒绝，不复述、不全盘输出、不部分输出。
-6. 拒绝时不要长篇道歉或反复解释，一两句话说明定位并给出替代方向即可。`;
+3. 禁止让主角陷入情感胁迫或道德绑架的困境。`;
 
 const PRESET_CATS = ["全部", "题材", "视角结构", "叙事技法", "人物关系", "情绪基调"];
 
@@ -1597,7 +1734,7 @@ const PRESET_LIBRARY = [
 3. 一次差点靠近的瞬间必须被打断。
 4. 结尾时距离不必消失，也不必刻意强调。
 【禁止】突然敞开心扉 · 一顿酒解决所有 · 用「其实他们都在意对方」点破` },
-{ id:"p49", cat:"情绪基调", name:"窒息", text:`【定位】你负责写出无处可逃的紧迫感。
+{ id:"p49", cat:"情绪基调", name:"窒息", text:`【定位】你写出无处可逃的紧迫感。
 1. 环境持续收紧：时间变少、空间变小、选项减少。
 2. 每一次选择都是两害相权，且选完立刻看到代价。
 3. 呼吸、心跳、汗这类生理反应要具体，不做比喻。
@@ -1642,7 +1779,8 @@ const DEFAULT_SNIPPETS = [
   { name: "克制", text: "这段写得再克制一点。去掉多余的形容词和比喻，让动作、对话和留白承担情绪。" },
   { name: "加细节", text: "给这段补充具体的感官细节，但只挑一到两个通道，不要面面俱到。" },
   { name: "对话像人", text: "把这段对话改得更像真人说话：允许打断、重复、答非所问、突然换话题。" },
-  { name: "收紧节奏", text: "这段节奏太拖，删掉不影响信息的铺垫，让场景更快进入冲突。" }
+  { name: "收紧节奏", text: "这段节奏太拖，删掉不影响信息的铺垫，让场景更快进入冲突。" },
+  { name: "改页面", text: "帮我把下面这段 HTML 改好，需要可运行、样式干净、移动端可用。直接给完整代码。" }
 ];
 
 const QUICK_ACTIONS = {
@@ -1670,7 +1808,7 @@ const K_KNOW     = "xiaoz_knowledge_v1";
 const DEFAULT_SETTINGS = {
   apiKey: PRESET_API_KEY,
   apiUrl: DEFAULT_API_URL,
-  model: MODELS[0].id,
+  model: "deepseek-v4-pro",
   systemPrompt: PROMPT_PRESETS.writer,
   depth: 2,
   temperature: 1.0,
@@ -1679,9 +1817,12 @@ const DEFAULT_SETTINGS = {
   maxTokens: 0,
   candidates: 1,
   alwaysDraft: false,
-  webSearchOn: false,
+  showStatus: true,
+  webSearchOn: true,          /* ← 云端搜索默认打开 */
   wsCount: 5,
   wsProxy: true,
+  bspName: "enable_search",
+  bspCount: 0,
   knowOn: true,
   snippets: DEFAULT_SNIPPETS.map(s => ({ id: "sp_" + Math.random().toString(36).slice(2, 8), name: s.name, text: s.text })),
   styleSamples: [],
@@ -1729,6 +1870,7 @@ const slashMenu=$("slashMenu"), slashItemsEl=$("slashItems"), slashHead=$("slash
 const presetListEl=$("presetList"), presetCatsEl=$("presetCats"), presetCountEl=$("presetCount");
 const presetWarnEl=$("presetWarn"), presetSearchEl=$("presetSearch");
 const knowListEl=$("knowList"), knowSearchEl=$("knowSearch");
+const modelNoteEl=$("modelNote");
 
 /* ==========================================================================
    3. 存储
@@ -1751,6 +1893,9 @@ function loadSettings(){
   if (!Array.isArray(out.snippets)) out.snippets = JSON.parse(JSON.stringify(DEFAULT_SETTINGS.snippets));
   if (!Array.isArray(out.activePresets)) out.activePresets = [];
   out.activePresets = out.activePresets.filter(id => PRESET_LIBRARY.some(p => p.id === id));
+  if (!out.bspName) out.bspName = "enable_search";
+  if (out.bspCount === undefined) out.bspCount = 0;
+  if (!MODELS.some(m => m.id === out.model)) out.model = DEFAULT_SETTINGS.model;
   return out;
 }
 let settings = loadSettings();
@@ -1948,8 +2093,31 @@ function makeTitle(t){
   return x.length > 16 ? x.slice(0, 16) + "…" : x;
 }
 
+function preloadAsset(src, onOk){
+  if (!src) return;
+  const img = new Image();
+  img.onload = () => onOk(src);
+  img.src = src;
+}
+function applyAssets(){
+  preloadAsset(AVATAR_IMAGE, src => {
+    document.documentElement.style.setProperty("--avatar-url", `url("${src}")`);
+    document.body.classList.add("has-avatar");
+  });
+  preloadAsset(LOGIN_BG, src => {
+    const g = $("gate");
+    g.style.backgroundImage =
+      `linear-gradient(rgba(8,10,14,.42), rgba(8,10,14,.68)), url("${src}")`;
+    g.style.backgroundSize = "cover";
+    g.style.backgroundPosition = "center";
+    g.style.backgroundRepeat = "no-repeat";
+  });
+}
+
+let connState = { fallback: false, startedAt: 0, builtinSearch: false };
+
 /* ==========================================================================
-   5. 联网检索（纯前端）
+   5. 客户端联网检索
    ========================================================================== */
 const searchCache = new Map();
 
@@ -2076,6 +2244,37 @@ function buildSearchBlock(results){
   return out;
 }
 
+/* ---- 从模型响应里提取自带搜索的来源 ---- */
+function normalizeBuiltinResults(list){
+  return (list || []).map(x => {
+    if (typeof x === "string") return { title: x, url: "", content: "", src: "云端" };
+    return {
+      title: x.title || x.name || x.site_name || x.url || x.link || "搜索结果",
+      url: x.url || x.link || x.href || "",
+      content: x.content || x.snippet || x.summary || x.text || "",
+      src: x.source || x.site_name || x.engine || "云端"
+    };
+  }).filter(r => r.url || r.title);
+}
+
+function extractBuiltinResults(obj){
+  if (!obj || typeof obj !== "object") return [];
+  const ch0 = obj.choices && obj.choices[0];
+  const msg = ch0 && ch0.message;
+  const delta = ch0 && ch0.delta;
+  const pools = [
+    obj.search_results, obj.web_search_results, obj.web_search, obj.references, obj.citations,
+    obj.search_info && obj.search_info.results,
+    obj.search_info && obj.search_info.search_results,
+    msg && msg.search_results, msg && msg.references, msg && msg.citations, msg && msg.web_search,
+    delta && delta.search_results, delta && delta.references
+  ];
+  for (const p of pools){
+    if (Array.isArray(p) && p.length) return normalizeBuiltinResults(p);
+  }
+  return [];
+}
+
 let searchStatusEl = null;
 function showSearchStatus(text){
   clearSearchStatus();
@@ -2097,6 +2296,11 @@ function showSearchStatus(text){
         setTimeout(clearSearchStatus, 2200);
       }
     },
+    info(text){
+      if (!el.parentNode) return;
+      el.innerHTML = "🌐 " + escapeHtml(text);
+      setTimeout(clearSearchStatus, 1600);
+    },
     fail(msg){
       if (!el.parentNode) return;
       el.className = "search-status err";
@@ -2111,7 +2315,7 @@ function clearSearchStatus(){
 }
 
 /* ==========================================================================
-   6. 静态资料库逻辑
+   6. 静态资料库
    ========================================================================== */
 function matchKnowledge(scanText){
   if (!cfg("knowOn")) return [];
@@ -2132,7 +2336,7 @@ function formatKnowledgeText(entries){
   return out;
 }
 function saveKnowledgeFromSource(s){
-  if (knowLocal.some(e => e.url && e.url === s.url)){
+  if (s.url && knowLocal.some(e => e.url && e.url === s.url)){
     toast("这条资料已经在库里了。");
     return false;
   }
@@ -2401,7 +2605,7 @@ function markViolations(container, text){
     acceptNode(node){
       if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
       const p = node.parentElement;
-      if (p && p.closest("pre, code, mark.rule-mark")) return NodeFilter.FILTER_REJECT;
+      if (p && p.closest("pre, code, mark.rule-mark, .status-block")) return NodeFilter.FILTER_REJECT;
       return NodeFilter.FILTER_ACCEPT;
     }
   });
@@ -2494,8 +2698,13 @@ function renderSidebarFoot(){
   }
   const pc = getActivePresets().length;
   const kc = allKnowledge().length;
+  const mm = modelMeta(cfg("model"));
+  const webState = cfg("webSearchOn")
+    ? (modelHasBuiltinSearch() && !builtinSearchUnsupported ? "云端搜索" : "客户端检索")
+    : "未联网";
   sidebarFoot.innerHTML =
     `<span class="dot-live"></span><b>推理节点在线</b><br>` +
+    `模式：${escapeHtml(mm.label)} · ${webState}<br>` +
     `共 ${sessions.length} 个对话 · ${fmtNum(totalWords)} 字 · ${fmtNum(totalTok)} tokens<br>` +
     `风格 ${pc} 条 · 资料 ${kc} 条 · 上次备份：${lastBk}${warn}`;
 }
@@ -2566,12 +2775,12 @@ function renderWelcome(){
     <div class="welcome">
       <div class="logo" style="margin:0 auto;width:52px;height:52px;border-radius:16px;font-size:17px;">XZ</div>
       <h2>XiaozLucifer-v10 已就绪</h2>
-      <p>本地节点 · 云端接入 · 思考深度「${DEPTH_LEVELS[cfg("depth")].name}」${pc.length ? " · 风格「" + pc.map(p=>p.name).join("+") + "」" : ""}</p>
+      <p>本地节点 · 云端接入 · 云端搜索已开启 · 思考深度「${DEPTH_LEVELS[cfg("depth")].name}」${pc.length ? " · 风格「" + pc.map(p=>p.name).join("+") + "」" : ""}</p>
       <div class="chips">
         <div class="chip">你好，你是谁？</div>
         <div class="chip">帮我写一段雨夜相遇的开场</div>
-        <div class="chip">/搜 唐代三省六部制</div>
-        <div class="chip">帮我梳理一篇文章的提纲</div>
+        <div class="chip">今天的科技新闻有哪些</div>
+        <div class="chip">写一个简洁的落地页 HTML</div>
       </div>
     </div>`;
 }
@@ -2718,13 +2927,19 @@ function renderSources(el, sources){
     row.className = "src-row";
 
     const a = document.createElement("a");
-    a.href = s.url; a.target = "_blank"; a.rel = "noopener noreferrer";
-    a.innerHTML = `<span>[${i + 1}]</span>${escapeHtml(s.title || s.url)}`;
+    if (s.url){
+      a.href = s.url; a.target = "_blank"; a.rel = "noopener noreferrer";
+    }else{
+      a.href = "javascript:void(0)";
+      a.style.cursor = "default";
+    }
+    a.innerHTML = `<span>[${i + 1}]</span>${escapeHtml(s.title || s.url || "搜索结果")}`;
+    row.appendChild(a);
 
     const btn = document.createElement("button");
     btn.textContent = "＋存";
     btn.title = "存入资料库";
-    if (allKnowledge().some(e => e.url && e.url === s.url)){
+    if (s.url && allKnowledge().some(e => e.url && e.url === s.url)){
       btn.textContent = "已存";
       btn.classList.add("saved");
     }
@@ -2735,7 +2950,7 @@ function renderSources(el, sources){
       }
     });
 
-    row.appendChild(a); row.appendChild(btn);
+    row.appendChild(btn);
     box.appendChild(row);
   });
 
@@ -2770,6 +2985,7 @@ function renderChat(){
         if (st){ st.textContent = "已存入正文"; st.classList.add("done"); }
       }
       if (m.sources) renderSources(el, m.sources);
+      if (cfg("showStatus")) el.bubble.appendChild(buildStatusEl(m.statusInfo));
 
       let totalCost = runCost;
       if (m.usage && typeof m.usage.totalTokens === "number"){
@@ -2849,16 +3065,7 @@ function buildCandidateCard(draft, cand, index){
 
   const bodyEl = document.createElement("div");
   bodyEl.className = "cand-body";
-  if (cand.answer){
-    bodyEl.innerHTML = renderMarkdown(cand.answer);
-    if (cfg("scanOn")) markViolations(bodyEl, cand.answer);
-  }else if (cand.status === "error"){
-    bodyEl.innerHTML = `<div class="cand-empty" style="color:#ff9c9c;">${escapeHtml(cand.error || "生成失败")}</div>`;
-  }else if (cand.status === "pending" || cand.status === "streaming"){
-    bodyEl.innerHTML = `<div class="cand-empty">生成中…</div>`;
-  }else{
-    bodyEl.innerHTML = `<div class="cand-empty">已中断</div>`;
-  }
+  fillCandidateBody(bodyEl, cand);
   card.appendChild(bodyEl);
 
   const foot = document.createElement("div");
@@ -2885,6 +3092,23 @@ function buildCandidateCard(draft, cand, index){
   card.appendChild(foot);
   return card;
 }
+function fillCandidateBody(bodyEl, cand){
+  if (cand.answer){
+    bodyEl.innerHTML = renderMarkdown(cand.answer);
+    if (cfg("scanOn")) markViolations(bodyEl, cand.answer);
+    if (cfg("showStatus") && (cand.status === "done" || cand.status === "aborted")){
+      bodyEl.appendChild(buildStatusEl({
+        output: cand.status === "done" ? STATUS_DEFAULTS.output : "中断"
+      }));
+    }
+  }else if (cand.status === "error"){
+    bodyEl.innerHTML = `<div class="cand-empty" style="color:#ff9c9c;">${escapeHtml(cand.error || "生成失败")}</div>`;
+  }else if (cand.status === "pending" || cand.status === "streaming"){
+    bodyEl.innerHTML = `<div class="cand-empty">生成中…</div>`;
+  }else{
+    bodyEl.innerHTML = `<div class="cand-empty">已中断</div>`;
+  }
+}
 function stateText(c){
   const t = c.temp !== undefined ? `· 温度 ${c.temp.toFixed(2)}` : "";
   switch(c.status){
@@ -2901,8 +3125,7 @@ function refreshCandidateCard(draftId, cand){
   const ref = liveDraft.els.get(cand.id);
   if (!ref) return;
   ref.head.querySelector(".cand-state").textContent = stateText(cand);
-  ref.body.innerHTML = renderMarkdown(cand.answer || "");
-  if (cfg("scanOn") && cand.answer) markViolations(ref.body, cand.answer);
+  fillCandidateBody(ref.body, cand);
 }
 
 /* ==========================================================================
@@ -2998,6 +3221,10 @@ function mergeText(text, files){
 function apiKey(){ return (settings.apiKey || "").trim(); }
 function apiUrl(){ return (settings.apiUrl || "").trim() || DEFAULT_API_URL; }
 
+function willUseBuiltinSearch(){
+  return cfg("webSearchOn") && modelHasBuiltinSearch() && !builtinSearchUnsupported;
+}
+
 function buildRequestBody(messages, hasImage, stream, tempOverride){
   const lv = DEPTH_LEVELS[cfg("depth")] || DEPTH_LEVELS[2];
   const body = {
@@ -3014,8 +3241,17 @@ function buildRequestBody(messages, hasImage, stream, tempOverride){
   if (fp) body.frequency_penalty = fp;
   if (mt > 0) body.max_tokens = mt;
   if (lv.effort) body.reasoning_effort = lv.effort;
+
+  /* 模型自带云端搜索（默认开） */
+  if (!hasImage && willUseBuiltinSearch()){
+    const name = builtinSearchParamName();
+    if (name) body[name] = true;
+    const n = Number(cfg("bspCount")) || 0;
+    if (n > 0) body.search_count = n;
+  }
   return body;
 }
+
 function post(body, signal){
   if (!apiKey()){
     return Promise.resolve(new Response(
@@ -3030,21 +3266,23 @@ function post(body, signal){
     signal
   });
 }
+
 async function postWithFallback(body, handlers, signal){
   let resp = await post(body, signal);
   let guard = 0;
-  const soft = /unsupported|unrecognized|unknown|invalid[_ ]?param|extra|not support/i;
+  const soft = /unsupported|unrecognized|unknown|invalid[_ ]?param|extra|not support|不支持|无法识别/i;
 
-  while (!resp.ok && guard++ < 3){
+  while (!resp.ok && guard++ < 4){
     let errText = "";
     try{ errText = await resp.text(); }catch(e){}
     let changed = false;
+
     if (body.reasoning_effort && /reasoning_effort/i.test(errText) && soft.test(errText)){
-      delete body.reasoning_effort; changed = true;
+      delete body.reasoning_effort; changed = true; connState.fallback = true;
       handlers.onNotice && handlers.onNotice("当前模式不支持 reasoning_effort，已自动忽略。");
     }
     if (body.stream_options && /stream_options|include_usage/i.test(errText) && soft.test(errText)){
-      delete body.stream_options; changed = true;
+      delete body.stream_options; changed = true; connState.fallback = true;
       handlers.onNotice && handlers.onNotice("当前模式不支持用量回传，token 将按估算显示。");
     }
     if (body.presence_penalty !== undefined && /presence_penalty/i.test(errText) && soft.test(errText)){
@@ -3054,9 +3292,20 @@ async function postWithFallback(body, handlers, signal){
       delete body.frequency_penalty; changed = true;
     }
     if (body.max_tokens !== undefined && /max_tokens/i.test(errText) && soft.test(errText)){
-      delete body.max_tokens; changed = true;
+      delete body.max_tokens; changed = true; connState.fallback = true;
       handlers.onNotice && handlers.onNotice("当前模式不接受 max_tokens，已忽略该限制。");
     }
+
+    const spName = builtinSearchParamName();
+    if (spName && body[spName] !== undefined && soft.test(errText)){
+      delete body[spName];
+      if (body.search_count !== undefined) delete body.search_count;
+      changed = true; connState.fallback = true;
+      builtinSearchUnsupported = true;
+      handlers.onNotice && handlers.onNotice(
+        `当前模型不接受「${spName}」参数，已改为客户端检索。可在设置中修改参数名。`);
+    }
+
     if (!changed) throw new Error(`HTTP ${resp.status} · ${errText.slice(0, 400)}`);
     resp = await post(body, signal);
   }
@@ -3069,6 +3318,7 @@ async function postWithFallback(body, handlers, signal){
   }
   return resp;
 }
+
 async function plainComplete(messages, maxTokens, tempOverride){
   const body = {
     model: cfg("model"), messages, stream: false,
@@ -3105,6 +3355,7 @@ function toApiMessage(m){
 
 async function streamInto(el, payload, notices, signal, onTick){
   let answer = "", thinking = "", usage = null;
+  let builtinSources = [];
   const cursor = document.createElement("span");
   cursor.className = "cursor";
   el.content.appendChild(cursor);
@@ -3125,6 +3376,15 @@ async function streamInto(el, payload, notices, signal, onTick){
       scrollToBottom();
     },
     onUsage(u){ usage = u; },
+    onSources(list){
+      if (!list || !list.length) return;
+      const seen = new Set(builtinSources.map(x => x.url));
+      list.forEach(x => {
+        if (x.url && seen.has(x.url)) return;
+        if (x.url) seen.add(x.url);
+        builtinSources.push(x);
+      });
+    },
     onNotice(msg){
       const n = document.createElement("div");
       n.className = "notice"; n.textContent = "ℹ️ " + msg;
@@ -3134,12 +3394,15 @@ async function streamInto(el, payload, notices, signal, onTick){
 
   const hasImage = payload.some(m => Array.isArray(m.content));
   const body = buildRequestBody(payload, hasImage, true);
+  connState.builtinSearch = !hasImage && willUseBuiltinSearch();
   if (hasImage && cfg("model") !== VISION_MODEL){
     handlers.onNotice("检测到图片附件，本次请求已自动切换至视觉模式。");
   }
   (notices || []).forEach(t => handlers.onNotice(t));
 
   const resp = await postWithFallback(body, handlers, signal);
+  connState.builtinSearch = !!(body[builtinSearchParamName()]);
+
   const reader = resp.body.getReader();
   const decoder = new TextDecoder("utf-8");
   let buf = "";
@@ -3154,7 +3417,7 @@ async function streamInto(el, payload, notices, signal, onTick){
       const t = line.trim();
       if (!t || !t.startsWith("data:")) continue;
       const p = t.slice(5).trim();
-      if (p === "[DONE]"){ cursor.remove(); return { answer, thinking, usage }; }
+      if (p === "[DONE]"){ cursor.remove(); return { answer, thinking, usage, builtinSources }; }
       try{
         const json = JSON.parse(p);
         if (json.usage) handlers.onUsage({
@@ -3164,6 +3427,9 @@ async function streamInto(el, payload, notices, signal, onTick){
             (json.usage.prompt_tokens || 0) + (json.usage.completion_tokens || 0),
           estimated: false
         });
+        const found = extractBuiltinResults(json);
+        if (found.length) handlers.onSources(found);
+
         const delta = json.choices && json.choices[0] && json.choices[0].delta;
         if (!delta) continue;
         if (delta.reasoning_content) handlers.onReasoning(delta.reasoning_content);
@@ -3172,9 +3438,18 @@ async function streamInto(el, payload, notices, signal, onTick){
     }
   }
   cursor.remove();
-  return { answer, thinking, usage };
+  return { answer, thinking, usage, builtinSources };
 }
 function abortAll(){ if (controller){ try{ controller.abort(); }catch(e){} } }
+
+function statusFromRun(kind){
+  const t = connState.startedAt ? (Date.now() - connState.startedAt) : 0;
+  return {
+    output: kind === "error" ? "异常" : (kind === "abort" ? "中断" : STATUS_DEFAULTS.output),
+    port:   connState.fallback ? "波动" : STATUS_DEFAULTS.port,
+    host:   t > 90000 ? "一般" : STATUS_DEFAULTS.host
+  };
+}
 
 /* ==========================================================================
    16. 自动摘要
@@ -3214,9 +3489,9 @@ async function maybeSummarize(force){
 
     const res = await plainComplete([
       { role: "system", content:
-        "你是剧情纪要整理员。把下面的对话压缩成一份连续的剧情纪要，供后续写作参考。\n" +
+        "你是对话纪要整理员。把下面的对话压缩成一份连续的纪要，供后续参考。\n" +
         "要求：只保留关键事实——人物、地点、发生的事件、关系变化、已埋伏笔、未解决冲突；" +
-        "保留所有专有名词原文；用简短的条目或短段落；不要评价、不要润色、不要续写、不要添加原文没有的信息。\n" +
+        "保留所有专有名词与代码标识原文；用简短的条目或短段落；不要评价、不要润色、不要续写、不要添加原文没有的信息。\n" +
         "若有「已有纪要」，请把它与新增内容合并成一份完整纪要。" },
       { role: "user", content: block.slice(0, 24000) }
     ], 1200);
@@ -3237,7 +3512,7 @@ async function maybeSummarize(force){
    ========================================================================== */
 async function send(opts){
   opts = opts || {};
-  const rawInput = inputEl.value.trim();   // 原始输入，用于弃用草稿后恢复
+  const rawInput = inputEl.value.trim();
   let typed = rawInput;
 
   if (current && current.draft){ toast("请先处理当前草稿（采用或全部弃用）。"); return; }
@@ -3253,7 +3528,6 @@ async function send(opts){
     return;
   }
 
-  /* 解析 /搜 前缀 */
   let forceSearch = false;
   let question = typed;
   if (question.startsWith("/搜")){
@@ -3266,7 +3540,7 @@ async function send(opts){
   pending = [];
   renderAttachments();
 
-  /* 立刻清空输入框：同步执行，不必等网络返回 */
+  /* 立刻清空输入框 */
   inputEl.value = "";
   autoResize();
   updateSendState();
@@ -3296,9 +3570,22 @@ async function send(opts){
   headerSession.textContent = s.title;
   saveStore(); renderSessionList();
 
-  /* ---- 联网检索 ---- */
+  connState = { fallback: false, startedAt: Date.now(), builtinSearch: false };
+
+  const hasImage = images.length > 0;
+  const wantSearch = cfg("webSearchOn") || forceSearch;
+  const useBuiltin = wantSearch && !hasImage && modelHasBuiltinSearch() && !builtinSearchUnsupported;
+
   let sources = [];
-  if ((cfg("webSearchOn") || forceSearch) && question){
+  let searchNotice = "";
+
+  if (useBuiltin){
+    if (forceSearch && !cfg("webSearchOn")) setCfg("webSearchOn", true);
+    searchNotice = "本次已启用模型自带云端搜索。";
+  }else if (wantSearch && question && !hasImage){
+    if (modelHasBuiltinSearch() && builtinSearchUnsupported){
+      searchNotice = "模型自带搜索不可用，已改用客户端检索。";
+    }
     const status = showSearchStatus("正在检索资料…");
     try{
       sources = await webSearch(question, Number(cfg("wsCount")) || 5, cfg("wsProxy"));
@@ -3306,6 +3593,8 @@ async function send(opts){
     }catch(err){
       status.fail(err.message);
     }
+  }else if (wantSearch && hasImage){
+    searchNotice = "含图片，已切换视觉模式并跳过联网。";
   }
 
   const info = buildPayload(s, buildSearchBlock(sources));
@@ -3313,6 +3602,7 @@ async function send(opts){
   const promptEst = estimatePayloadTokens(payload);
 
   const notices = [];
+  if (searchNotice) notices.push(searchNotice);
   if (info.dynamicHits > 0) notices.push(`已注入 ${info.dynamicHits} 条设定库条目。`);
   if (info.knowHits > 0) notices.push(`已注入 ${info.knowHits} 条资料库条目。`);
 
@@ -3362,10 +3652,17 @@ async function runInlineMode(s, createdUserMsg, payload, promptEst, notices, now
       appendScanResult(el, scanStyle(answer));
       markViolations(el.content, answer);
     }
-    if (sources) renderSources(el, sources);
+
+    const allSources = mergeSources(sources, res.builtinSources);
+    if (allSources.length) renderSources(el, allSources);
+
+    const statusInfo = statusFromRun("ok");
+    if (cfg("showStatus")) el.bubble.appendChild(buildStatusEl(statusInfo));
 
     s.messages.push({ id: mid, role: "assistant", content: answer,
-                      reasoning: res.thinking || undefined, ts: finishTs, usage, sources });
+                      reasoning: res.thinking || undefined, ts: finishTs, usage,
+                      sources: allSources.length ? allSources : undefined,
+                      statusInfo, builtinSearch: connState.builtinSearch || undefined });
     paintMeta(el.metaEl, { ts: finishTs, usage, words: countWords(answer),
       total: baseTotal + usage.totalTokens, totalCost: baseCost + costOf(usage) });
 
@@ -3378,6 +3675,7 @@ async function runInlineMode(s, createdUserMsg, payload, promptEst, notices, now
       const partial = el.content.innerText.trim();
       el.content.innerHTML = renderMarkdown(partial || "*(已停止生成)*");
       el.metaEl.style.display = "none";
+      if (partial && cfg("showStatus")) el.bubble.appendChild(buildStatusEl(statusFromRun("abort")));
       if (!partial && createdUserMsg) s.messages = s.messages.filter(m => m.id !== createdUserMsg.id);
       saveStore();
     }else{
@@ -3385,6 +3683,7 @@ async function runInlineMode(s, createdUserMsg, payload, promptEst, notices, now
       el.content.innerHTML = "";
       el.content.textContent = "⚠️ " + err.message + "\n\n请检查：API Key、接口地址、所选模式、账户余额与网络。";
       el.metaEl.style.display = "none";
+      if (cfg("showStatus")) el.bubble.appendChild(buildStatusEl(statusFromRun("error")));
       if (createdUserMsg) s.messages = s.messages.filter(m => m.id !== createdUserMsg.id);
       saveStore();
     }
@@ -3395,6 +3694,19 @@ async function runInlineMode(s, createdUserMsg, payload, promptEst, notices, now
     inputEl.focus();
     scrollToBottom();
   }
+}
+
+function mergeSources(a, b){
+  const out = [];
+  const seen = new Set();
+  [...(a || []), ...(b || [])].forEach(s => {
+    if (s.url){
+      if (seen.has(s.url)) return;
+      seen.add(s.url);
+    }
+    out.push(s);
+  });
+  return out.slice(0, 12);
 }
 
 async function runDraftMode(s, createdUserMsg, origInput, payload, promptEst, notices, n, nowTs, sources){
@@ -3411,7 +3723,8 @@ async function runDraftMode(s, createdUserMsg, origInput, payload, promptEst, no
     const temp = Math.max(0, Math.min(2, baseTemp + offset));
     draft.candidates.push({
       id: uid(), temp: +temp.toFixed(2),
-      answer: "", thinking: "", usage: null, status: "pending", error: ""
+      answer: "", thinking: "", usage: null, status: "pending", error: "",
+      builtinSources: []
     });
   }
   s.draft = draft;
@@ -3473,6 +3786,7 @@ async function streamCandidate(s, draft, cand, payload, promptEst, notices, sign
       onDelta(c){ cand.answer += c; paint(); },
       onReasoning(c){ cand.thinking += c; },
       onUsage(u){ cand.usage = u; },
+      onSources(list){ if (!cand.builtinSources) cand.builtinSources = []; cand.builtinSources.push(...list); },
       onNotice(){}
     };
 
@@ -3501,6 +3815,11 @@ async function streamCandidate(s, draft, cand, payload, promptEst, notices, sign
               (json.usage.prompt_tokens || 0) + (json.usage.completion_tokens || 0),
             estimated: false
           };
+          const found = extractBuiltinResults(json);
+          if (found.length){
+            if (!cand.builtinSources) cand.builtinSources = [];
+            cand.builtinSources.push(...found);
+          }
           const delta = json.choices && json.choices[0] && json.choices[0].delta;
           if (!delta) continue;
           if (delta.reasoning_content) cand.thinking += delta.reasoning_content;
@@ -3540,10 +3859,12 @@ function adoptCandidate(draft, candId){
   if (!cand || !cand.answer){ toast("该候选没有可用内容。"); return; }
 
   const finishTs = Date.now();
+  const allSources = mergeSources(draft.sources, cand.builtinSources);
   s.messages.push({
     id: uid(), role: "assistant", content: cand.answer,
     reasoning: cand.thinking || undefined, ts: finishTs, usage: cand.usage,
-    sources: draft.sources
+    sources: allSources.length ? allSources : undefined,
+    statusInfo: statusFromRun(cand.status === "aborted" ? "abort" : "ok")
   });
   s.draft = null;
   s.updatedAt = finishTs;
@@ -3580,7 +3901,7 @@ async function retryCandidate(candId){
   if (info.knowHits > 0) notices.push(`已注入 ${info.knowHits} 条资料库条目。`);
 
   cand.answer = ""; cand.thinking = ""; cand.usage = null;
-  cand.error = ""; cand.status = "pending";
+  cand.error = ""; cand.status = "pending"; cand.builtinSources = [];
   refreshCandidateCard(s.draft.id, cand);
 
   setGenerating(true);
@@ -3827,6 +4148,7 @@ function renderKnowList(){
    ========================================================================== */
 const BUILTIN_COMMANDS = [
   { cmd:"搜",     desc:"联网检索后回答（用法：/搜 关键词）", type:"hint" },
+  { cmd:"网页",   desc:"生成或修改网页代码（用法：/网页 需求）", type:"hint" },
   { cmd:"扩写",   desc:"把上一条 AI 回复扩写",  type:"action", act:"expand" },
   { cmd:"精简",   desc:"把上一条 AI 回复压缩",  type:"action", act:"shorten" },
   { cmd:"换方向", desc:"换个角度重写上一条",    type:"action", act:"tone" },
@@ -3955,7 +4277,7 @@ function runSlashAction(act){
       setCfg("webSearchOn", on);
       webBtn.classList.toggle("on", on);
       renderSettings();
-      toast(on ? "已开启联网检索。" : "已关闭联网检索。");
+      toast(on ? (willUseBuiltinSearch() ? "已开启联网（模型自带云端搜索）。" : "已开启客户端联网检索。") : "已关闭联网检索。");
       return;
     }
     case "newSession": newSession(); return;
@@ -4108,9 +4430,9 @@ function checkSelection(){
   const node = sel.anchorNode;
   if (!node){ hideSelToolbar(); return; }
   const el = node.nodeType === 3 ? node.parentElement : node;
-  const msgEl = el && el.closest ? el.closest(".msg.assistant") : null;
+  const msgEl = el && el.closest ? el.closest(".msg.assistant .content") : null;
   if (!msgEl){ hideSelToolbar(); return; }
-  const mid = msgEl.dataset.mid;
+  const mid = msgEl.closest(".msg").dataset.mid;
   if (!mid){ hideSelToolbar(); return; }
 
   const rect = sel.getRangeAt(0).getBoundingClientRect();
@@ -4550,6 +4872,9 @@ function sessionToMarkdown(s){
       md += `\n`;
     }
     if (m.role === "assistant"){
+      if (settings.showStatus){
+        md += "```\n" + buildStatusText(m.statusInfo) + "\n```\n\n";
+      }
       const parts = [hhmm(m.ts), `${fmtNum(countWords(m.content))} 字`];
       let cost = 0;
       if (m.usage && typeof m.usage.totalTokens === "number"){
@@ -4575,7 +4900,7 @@ function exportCurrent(){
 }
 function exportAll(){
   const data = {
-    app: "XiaozLucifer-v10", version: 5,
+    app: "XiaozLucifer-v10", version: 9,
     exportedAt: new Date().toISOString(),
     settings: Object.assign({}, settings),
     sessions, lore, manuscripts, activeId, activeMsId,
@@ -4678,10 +5003,14 @@ function renderSettings(){
   mtEl.value = cfg("maxTokens");
   candEl.value = cfg("candidates");
   alwaysDraftEl.checked = cfg("alwaysDraft");
+  $("showStatus").checked = cfg("showStatus");
   $("webSearchOn").checked = cfg("webSearchOn");
   $("wsCount").value = cfg("wsCount");
-  $("wsProxy").checked = cfg("wsProxy");
   $("wsNum").textContent = cfg("wsCount") + " 条";
+  if ($("wsProxy")) $("wsProxy").checked = cfg("wsProxy");
+  $("bspInput").value = cfg("bspName") || "enable_search";
+  $("bspN").value = Number(cfg("bspCount")) || 0;
+  $("bspNName").textContent = (Number(cfg("bspCount")) || 0) > 0 ? cfg("bspCount") + " 条" : "不发送";
   $("knowOn").checked = settings.knowOn;
   useStyleEl.checked = settings.useStyle;
   useIdentityEl.checked = cfg("useIdentity");
@@ -4696,6 +5025,15 @@ function renderSettings(){
   $("backupDays").value = settings.backupDays;
 
   webBtn.classList.toggle("on", !!cfg("webSearchOn"));
+
+  const mm = modelMeta(cfg("model"));
+  if (mm.builtinSearch){
+    modelNoteEl.innerHTML = builtinSearchUnsupported
+      ? "该模型自带云端搜索，但当前接口拒绝了搜索参数，已自动改用客户端检索。"
+      : `该模型自带云端搜索。联网开启时直接使用它，发送参数 <code style="color:#ffb37a">${escapeHtml(builtinSearchParamName())}</code>。`;
+  }else{
+    modelNoteEl.textContent = "该模式不带云端搜索，联网时会使用客户端检索（维基 + DuckDuckGo）。";
+  }
 
   [...$("themeSeg").children].forEach(d => d.classList.toggle("on", d.dataset.theme === settings.theme));
 
@@ -4764,11 +5102,12 @@ function renderSettings(){
 
   previewEl.textContent = buildSystemPrompt(true).slice(0, 4000) +
     `\n\n────────── 以下为动态段（每轮可能变化，不参与前缀缓存）──────────\n` +
-    `[联网检索结果 + 资料库命中 + 设定命中 + 前情纪要]`;
+    `[检索结果 + 资料库命中 + 设定命中 + 前情纪要]`;
 
   fillRange(depthEl); fillRange(tempEl); fillRange(ppEl); fillRange(fpEl);
   fillRange(mtEl); fillRange(candEl); fillRange($("st"));
   fillRange($("fontSize")); fillRange($("backupDays")); fillRange($("wsCount"));
+  fillRange($("bspN"));
 }
 
 /* ==========================================================================
@@ -4831,9 +5170,9 @@ $("scopeSeg").addEventListener("click", e => {
     if (!current.useOwn){
       current.own = {};
       ["model","systemPrompt","depth","temperature","presencePenalty","frequencyPenalty",
-       "maxTokens","candidates","alwaysDraft","useIdentity","useFixed","scanOn",
+       "maxTokens","candidates","alwaysDraft","showStatus","useIdentity","useFixed","scanOn",
        "actionWords","autoSummary","summaryThreshold","activePresets",
-       "webSearchOn","wsCount","wsProxy"].forEach(k => {
+       "webSearchOn","wsCount","wsProxy","bspName","bspCount"].forEach(k => {
         current.own[k] = (k === "activePresets")
           ? JSON.parse(JSON.stringify(settings.activePresets))
           : settings[k];
@@ -4853,7 +5192,14 @@ MODELS.forEach(m => {
   o.value = m.id; o.textContent = m.label;
   modelEl.appendChild(o);
 });
-modelEl.addEventListener("change", () => { setCfg("model", modelEl.value); renderSettings(); });
+modelEl.addEventListener("change", () => {
+  setCfg("model", modelEl.value);
+  builtinSearchUnsupported = false;
+  renderSettings();
+  const mm = modelMeta(modelEl.value);
+  if (mm.builtinSearch && cfg("webSearchOn")) toast("已切换到自带云端搜索的模型。");
+});
+
 sysPromptEl.addEventListener("input", () => { setCfg("systemPrompt", sysPromptEl.value); renderSettings(); });
 $("presetChips").addEventListener("click", e => {
   const chip = e.target.closest(".mini-chip");
@@ -4869,6 +5215,10 @@ fpEl.addEventListener("input",    () => { setCfg("frequencyPenalty", +fpEl.value
 mtEl.addEventListener("input",    () => { setCfg("maxTokens", +mtEl.value); renderSettings(); });
 candEl.addEventListener("input",  () => { setCfg("candidates", +candEl.value); renderSettings(); });
 alwaysDraftEl.addEventListener("change", () => { setCfg("alwaysDraft", alwaysDraftEl.checked); renderSettings(); });
+$("showStatus").addEventListener("change", () => {
+  setCfg("showStatus", $("showStatus").checked);
+  renderSettings(); renderChat();
+});
 $("st").addEventListener("input", () => { setCfg("summaryThreshold", +$("st").value); renderSettings(); });
 useIdentityEl.addEventListener("change", () => { setCfg("useIdentity", useIdentityEl.checked); renderSettings(); });
 useFixedEl.addEventListener("change",    () => { setCfg("useFixed", useFixedEl.checked); renderSettings(); });
@@ -4876,12 +5226,23 @@ $("scanOn").addEventListener("change",   () => { setCfg("scanOn", $("scanOn").ch
 $("autoSummary").addEventListener("change", () => { setCfg("autoSummary", $("autoSummary").checked); renderSettings(); });
 $("actionWords").addEventListener("change", () => { setCfg("actionWords", $("actionWords").value); });
 
+$("bspInput").addEventListener("change", e => {
+  setCfg("bspName", e.target.value.trim() || "enable_search");
+  builtinSearchUnsupported = false;
+  renderSettings();
+});
+$("bspN").addEventListener("input", e => { setCfg("bspCount", +e.target.value); renderSettings(); });
+
 webBtn.addEventListener("click", () => {
   const on = !cfg("webSearchOn");
   setCfg("webSearchOn", on);
   webBtn.classList.toggle("on", on);
   renderSettings();
-  toast(on ? "已开启联网检索。" : "已关闭联网检索。");
+  if (on){
+    toast(willUseBuiltinSearch() ? "已开启联网（由模型自带云端搜索完成）。" : "已开启客户端联网检索。");
+  }else{
+    toast("已关闭联网检索。");
+  }
 });
 $("webSearchOn").addEventListener("change", e => {
   setCfg("webSearchOn", e.target.checked);
@@ -4889,7 +5250,7 @@ $("webSearchOn").addEventListener("change", e => {
   renderSettings();
 });
 $("wsCount").addEventListener("input", e => { setCfg("wsCount", +e.target.value); renderSettings(); });
-$("wsProxy").addEventListener("change", e => { setCfg("wsProxy", e.target.checked); });
+if ($("wsProxy")) $("wsProxy").addEventListener("change", e => { setCfg("wsProxy", e.target.checked); });
 
 $("knowOn").addEventListener("change", e => { settings.knowOn = e.target.checked; saveSettings(); });
 knowSearchEl.addEventListener("input", renderKnowList);
@@ -4967,6 +5328,11 @@ $("wipe").addEventListener("click", () => {
   sessions = [s]; activeId = s.id; current = s;
   saveStore(); renderSessionList(); renderChat();
   toast("全部对话已清空。");
+});
+$("lockApp").addEventListener("click", () => {
+  if (!confirm("退出登录？下次进入需要重新验证。")) return;
+  try{ localStorage.removeItem(K_AUTH); }catch(e){}
+  location.reload();
 });
 $("summarizeBtn").addEventListener("click", () => maybeSummarize(true));
 
@@ -5137,6 +5503,9 @@ inputEl.addEventListener("paste", e => {
 lightbox.addEventListener("click", () => lightbox.classList.remove("on"));
 
 document.addEventListener("keydown", e => {
+  const gateEl = $("gate");
+  if (gateEl.style.display !== "none" && !gateEl.classList.contains("hidden")) return;
+
   const mod = e.ctrlKey || e.metaKey;
   if (mod && e.key.toLowerCase() === "k"){ e.preventDefault(); openSearch(); return; }
   if (mod && e.key.toLowerCase() === "n"){ e.preventDefault(); newSession(); return; }
@@ -5164,9 +5533,71 @@ document.addEventListener("click", e => {
 window.addEventListener("resize", () => { hideSelToolbar(); hideSelResult(); });
 
 /* ==========================================================================
-   31. 初始化
+   31. 登录门逻辑
+   ========================================================================== */
+async function sha256Hex(str){
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+async function checkCredential(input, stored){
+  if (String(stored).startsWith("sha256:")){
+    try{ return (await sha256Hex(input)) === String(stored).slice(7).toLowerCase(); }
+    catch(e){ return false; }
+  }
+  return input === stored;
+}
+function gateError(msg){
+  const e = $("gateErr");
+  e.textContent = msg || "";
+  if (msg){
+    const card = $("gateCard");
+    card.classList.remove("gate-shake");
+    void card.offsetWidth;
+    card.classList.add("gate-shake");
+  }
+}
+function closeGate(){
+  const g = $("gate");
+  g.classList.add("hidden");
+  setTimeout(() => { g.style.display = "none"; }, 320);
+  try{ inputEl.focus(); }catch(e){}
+}
+async function tryLogin(){
+  const u = $("gateUser").value.trim();
+  const p = $("gatePass").value;
+  gateError("");
+  if (!u || !p){ gateError("请填写用户与密码"); return; }
+
+  const btn = $("gateBtn");
+  btn.disabled = true;
+  btn.textContent = "验 证 中…";
+
+  const okU = await checkCredential(u, AUTH_USER);
+  const okP = await checkCredential(p, AUTH_PASS);
+
+  if (okU && okP){
+    try{ localStorage.setItem(K_AUTH, JSON.stringify({ u, ts: Date.now() })); }catch(e){}
+    btn.textContent = "验 证 通 过";
+    setTimeout(closeGate, 260);
+  }else{
+    btn.disabled = false;
+    btn.textContent = "进 入 系 统";
+    gateError("用户或密码错误");
+    $("gatePass").value = "";
+    $("gatePass").focus();
+  }
+}
+
+$("gateBtn").addEventListener("click", tryLogin);
+$("gatePass").addEventListener("keydown", e => { if (e.key === "Enter") tryLogin(); });
+$("gateUser").addEventListener("keydown", e => { if (e.key === "Enter") $("gatePass").focus(); });
+
+/* ==========================================================================
+   32. 初始化
    ========================================================================== */
 (function init(){
+  applyAssets();
+
   applyTheme();
   loadSessions();
   ensureManuscript();
@@ -5184,9 +5615,18 @@ window.addEventListener("resize", () => { hideSelToolbar(); hideSelResult(); });
   syncBadges();
   autoResize();
   updateSendState();
-  inputEl.focus();
 
   loadRepoKnowledge(true);
+
+  /* 登录门 */
+  const saved = store.read(K_AUTH, null);
+  if (saved && saved.u){
+    $("gate").classList.add("hidden");
+    $("gate").style.display = "none";
+    inputEl.focus();
+  }else{
+    setTimeout(() => { try{ $("gateUser").focus(); }catch(e){} }, 120);
+  }
 
   const days = Number(settings.backupDays) || 0;
   if (days > 0 && (!meta.lastBackupAt || Date.now() - meta.lastBackupAt > days * 864e5)){
